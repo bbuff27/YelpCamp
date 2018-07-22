@@ -1,27 +1,13 @@
-const express = require("express");
-      app = express();
-      request = require("request");
-      bodyParser = require("body-parser");
-      mongoose = require("mongoose");
+const express = require("express"),
+      app = express(),
+      request = require("request"),
+      bodyParser = require("body-parser"),
+      mongoose = require("mongoose"),
+      Campground = require("./models/campground"),
+      seedDB = require("./seeds");
 
+seedDB();
 mongoose.connect("mongodb://localhost/yelp_camp");
-
-const campgroundSchema = mongoose.Schema({
-  name: String,
-  image: String,
-  description: String
-});
-
-const Campground = mongoose.model("Campground", campgroundSchema);
-
-// Campground.create(
-//   {
-//     name: "Blackwoods Campground", 
-//     image:"https://s3-production.bobvila.com/slides/26529/widened/blackwoods.jpg?1526489505",
-//     description: "Beautiful clear water views nestled deep in the mountains. Plenty of sun and fishing."
-//   }, (err, campground) => {
-//     err ? console.log(err) : console.log("Campground added successfully: " + campground)
-//   });
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -55,7 +41,7 @@ app.get("/campgrounds/new", (req, res) => {
 
 //SHOW - Display information on a single campground
 app.get("/campgrounds/:id", (req, res) => {
-  Campground.findById(req.params.id, (err, id) => {
+  Campground.findById(req.params.id).populate("comments").exec((err, id) => {
     err ? console.log(err) : res.render("show", {campground: id})
   });
 });
