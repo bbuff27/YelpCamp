@@ -14,7 +14,7 @@
         <img class="img-responsive" src="<%= campground.image %>">
         <div class="caption-full">
           <h4 class="pull-right">9.99/night</h4>
-          <h4><%= campground.name %></h4>
+          <h4><a href="#"><%= campground.name %></a></h4>
           <p><%= campground.description %></p>
         </div>
       </div>
@@ -22,7 +22,6 @@
         <div class="text-right">
           <p><a class="btn btn-success pull-right" href="/campgrounds/<%= campground._id %>/comments/new">Leave a Review</a></p>
         </div>
-        <hr>
         <% campground.comments.forEach(comment => { %>
           <div class="row">
             <div class="col-md-12">
