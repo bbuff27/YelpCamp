@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
 //INDEX - Show all campgrounds in database
 app.get("/campgrounds", (req, res) => {
   Campground.find({}, (err, allCampgrounds) => {
-    err ? console.log(err) : res.render("index", {campgrounds: allCampgrounds})
+    err ? console.log(err) : res.render("campgrounds/index", {campgrounds: allCampgrounds})
   });
 });
 
@@ -36,13 +36,20 @@ app.post("/campgrounds", (req, res) => {
 
 //NEW - Display form to create new campground in database
 app.get("/campgrounds/new", (req, res) => {
-  res.render("new.ejs");
+  res.render("campgrounds/new");
 });
 
 //SHOW - Display information on a single campground
 app.get("/campgrounds/:id", (req, res) => {
   Campground.findById(req.params.id).populate("comments").exec((err, id) => {
-    err ? console.log(err) : res.render("show", {campground: id})
+    err ? console.log(err) : res.render("campgrounds/show", {campground: id})
+  });
+});
+
+// ****COMMENTS ROUTES****
+app.get("/campgrounds/:id/comments/new", (req, res) => {
+  Campground.findById(req.params.id, (err, id) => {
+    err ? console.log(err) : res.render("comments/new", {campground: id});
   });
 });
 
