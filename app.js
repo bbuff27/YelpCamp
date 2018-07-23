@@ -4,6 +4,7 @@ const express = require("express"),
       bodyParser = require("body-parser"),
       mongoose = require("mongoose"),
       Campground = require("./models/campground"),
+      Comment = require("./models/comment")
       seedDB = require("./seeds");
 
 seedDB();
@@ -50,6 +51,22 @@ app.get("/campgrounds/:id", (req, res) => {
 app.get("/campgrounds/:id/comments/new", (req, res) => {
   Campground.findById(req.params.id, (err, id) => {
     err ? console.log(err) : res.render("comments/new", {campground: id});
+  });
+});
+
+app.post("/campgrounds/:id/comments", (req, res) => {
+  Campground.findById(req.params.id, (err, campground) => {
+    if(err) { 
+      console.log(err)
+      res.redirect("/campgrounds")
+    } else {
+      Comment.create(req.body.comment, (err, comment) => {
+        err ? console.log(err) 
+            : campground.comments.push(comment);
+              campground.save();
+              res.redirect("/campgrounds/" + campground._id);
+      });
+    }
   });
 });
 
